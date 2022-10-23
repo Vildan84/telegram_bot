@@ -5,9 +5,14 @@ from telebot import types
 import config
 import emoji
 bot = TeleBot(config.TOKEN)
+
 board = {1: emoji.emojize(":keycap_1:"), 2: emoji.emojize(":keycap_2:"), 3: emoji.emojize(":keycap_3:"),
          4: emoji.emojize(":keycap_4:"), 5: emoji.emojize(":keycap_5:"), 6: emoji.emojize(":keycap_6:"),
          7: emoji.emojize(":keycap_7:"), 8: emoji.emojize(":keycap_8:"), 9: emoji.emojize(":keycap_9:")}
+
+new_board = {1: emoji.emojize(":keycap_1:"), 2: emoji.emojize(":keycap_2:"), 3: emoji.emojize(":keycap_3:"),
+             4: emoji.emojize(":keycap_4:"), 5: emoji.emojize(":keycap_5:"), 6: emoji.emojize(":keycap_6:"),
+             7: emoji.emojize(":keycap_7:"), 8: emoji.emojize(":keycap_8:"), 9: emoji.emojize(":keycap_9:")}
 player_x = 1
 player_zero = 1
 count = 0
@@ -38,15 +43,16 @@ def move_x(number):
     global count
     global player_x
     global player_zero
+
     if number > 9 or number < 0 or board[number] == "X" or board[number] == "O":
         return "Ячейка занята или число вне диапазона"
     board[number] = emoji.emojize(':cross_mark:')
     count += 1
     if count >= 5:
         if check_result(board):
-            return "Победил игрок X !!! Нажмите '/start' для начала"
+            return "Победил игрок X !!! Нажмите '/clear' для очистки доски"
     if count >= 8:
-        return "Ничья !!! Нажмите '/start' для начала"
+        return "Ничья !!! Нажмите '/clear' для очистки доски"
     player_x, player_zero = player_zero, player_x
     return number
 
@@ -61,18 +67,26 @@ def move_zero(number):
     count += 1
     if count >= 5:
         if check_result(board):
-            return "Победил игрок O !!! Нажмите '/start' для начала"
+            return "Победил игрок O !!! Нажмите '/clear' для очистки доски"
     if count >= 8:
-        return "Ничья !!! Нажмите '/start' для начала"
+        return "Ничья !!! Нажмите '/clear' для очистки доски"
     player_x, player_zero = player_zero, player_x
     return number
+
+
+@bot.message_handler(commands=["clear"])
+def clear(msg: telebot.types.Message):
+    global board
+    board = new_board
+    bot.send_message(chat_id=msg.from_user.id, text="Board is clear, press '/start'")
 
 
 @bot.message_handler(commands=["start"])
 def start(msg: telebot.types.Message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     game = types.KeyboardButton("/zero_x")
-    markup.add(game)
+    clean = types.KeyboardButton("/clear")
+    markup.add(game, clean)
     bot.send_message(chat_id=msg.from_user.id, text="Choose game", reply_markup=markup)
 
 
