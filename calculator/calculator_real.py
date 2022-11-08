@@ -48,8 +48,11 @@ def math_string_to_list(s):
             elif i == len(s) - 1:
                 res.append(int(s[start + 1:]))
         return math_string_recurs(res)
-    except:
-        return "Wrong input"
+    except ValueError:
+        return "Неверный ввод!!!"
+    except ZeroDivisionError:
+        return "На ноль делить нельзя!!!"
+
 
 
 

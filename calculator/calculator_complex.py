@@ -14,10 +14,13 @@ def math_complex_to_list(s):
             elif s[j] in ('*', '/', '+', '-') and s[j - 1] == ')':
                 result.append(s[j])
                 start = j
-    except:
-        return "Wrong input"
+    except ValueError:
+        return "Неверный ввод"
 
-    return calc_list(result)
+    if len(result) != 5:
+        return "Ошибка ввода"
+    else:
+        return calc_list(result)
 
 
 def calc_list(l):

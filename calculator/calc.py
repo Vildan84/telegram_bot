@@ -15,13 +15,12 @@ def start(msg: telebot.types.Message):
     real_num = types.KeyboardButton("/real")
     logic = types.KeyboardButton("/log")
     markup.add(com_num, real_num, logic)
-    bot.send_message(chat_id=msg.from_user.id, text="Click complex or real numbers "
-                                                    "or log to download the log", reply_markup=markup)
+    bot.send_message(chat_id=msg.from_user.id, text="Выберете пункт из меню:", reply_markup=markup)
 
 
 @bot.message_handler(commands=["real"])
 def real(msg: telebot.types.Message):
-    bot.send_message(chat_id=msg.from_user.id, text="Enter digits to calculate, expression with brackets are supported")
+    bot.send_message(chat_id=msg.from_user.id, text="Введите числа для расчета, выражения в скобках поддерживаются!")
     bot.register_next_step_handler(callback=real_calc, message=msg)
 
 
@@ -33,8 +32,7 @@ def real_calc(msg: telebot.types.Message):
 
 @bot.message_handler(commands=["complex"])
 def complex_(msg: telebot.types.Message):
-    bot.send_message(chat_id=msg.from_user.id, text="Enter complex digits to calculate, "
-                                                    "for example (1 + 1i) + (5 - 2i)")
+    bot.send_message(chat_id=msg.from_user.id, text="Введите комплексные числа, пример: (1 + 1i) + (5 - 2i)")
     bot.register_next_step_handler(callback=complex_calc, message=msg)
 
 
