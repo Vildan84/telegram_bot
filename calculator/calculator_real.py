@@ -40,14 +40,17 @@ def math_string_to_list(s):
         s = s.replace(' ', '')
         start = -1
         for i in range(len(s)):
-            if s[i] == '(' or s[i] in ('*', '/', '+', ')') and s[i - 1] == ')':
+            if s[i] == '(':
                 res.append(s[i])
                 start = i
             elif s[i] == "-" and i == 0:
                 continue
+            elif s[i] in ('*', '/', '+', ')', '-') and s[i - 1] == ')':
+                res.append(s[i])
+                start = i
             elif s[i] == "-" and s[i - 1] == "(":
                 continue
-            elif s[i] in ('*', '/', '+', '-', ')') and s[i - 1] != ')' and i != 0:
+            elif s[i] in ('*', '/', '+', '-', ')') and i != 0 and s[i - 1] != ')':
                 res.append(float(s[start + 1:i]))
                 res.append(s[i])
                 start = i
