@@ -1,3 +1,9 @@
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO, filename="files/mylog.log", filemode="a")
+
+
 def solution(list_):
     result = [float(list_[0])]
     i = 1
@@ -49,10 +55,13 @@ def math_string_to_list(s):
                 res.append(float(s[start + 1:]))
         return str(math_string_recurs(res))
     except ValueError:
+        logging.error("Exception occurred", exc_info=True)
         return "Неверный ввод!!!"
     except ZeroDivisionError:
+        logging.error("Exception occurred", exc_info=True)
         return "На ноль делить нельзя!!!"
     except IndexError:
+        logging.error("Exception occurred", exc_info=True)
         return "Неверный ввод!!!"
 
 

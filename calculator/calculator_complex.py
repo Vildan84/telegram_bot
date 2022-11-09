@@ -1,3 +1,9 @@
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO, filename="files/mylog.log", filemode="a")
+
+
 def math_complex_to_list(s):
     result = []
     try:
@@ -15,6 +21,7 @@ def math_complex_to_list(s):
                 result.append(s[j])
                 start = j
     except ValueError:
+        logging.error("Exception occurred", exc_info=True)
         return "Неверный ввод"
 
     if len(result) != 5:

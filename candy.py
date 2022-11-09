@@ -72,7 +72,6 @@ def candy(msg):
         bot.send_message(chat_id=msg.from_user.id, text="Игрок ходит первым")
     else:
         bot.send_message(chat_id=msg.from_user.id, text=f"Бот ходит первым, на столе {remain} конфет")
-        bot.send_message(chat_id=msg.from_user.id, text=bot_turn(remain))
 
 
 @bot.message_handler()

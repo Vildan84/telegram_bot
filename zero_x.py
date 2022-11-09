@@ -170,4 +170,4 @@ def gameplay(msg: telebot.types.Message):
         bot.send_message(chat_id=msg.from_user.id, text="Неверный ввод, выберете нужную ячейку")
 
 
-bot.polling()
+bot.polling(none_stop=True)

@@ -2,11 +2,13 @@ from telebot import TeleBot
 from telebot import types
 from calculator_real import math_string_to_list
 from calculator_complex import math_complex_to_list
-from logger import log
+import logging
 import telebot.types
 import config
 bot = TeleBot(config.TOKEN)
 
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO, filename="files/mylog.log", filemode="a")
 
 result = ""
 old_result = ""
@@ -45,14 +47,14 @@ keyboard.row(telebot.types.InlineKeyboardButton("i", callback_data="i"),
 @bot.message_handler(commands=["start"])
 def start(msg: telebot.types.Message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    com_num = types.KeyboardButton("/complex")
-    real_num = types.KeyboardButton("/real")
+    real_num = types.KeyboardButton("/calculator")
     logic = types.KeyboardButton("/log")
-    markup.add(com_num, real_num, logic)
+    markup.add(real_num, logic)
     bot.send_message(chat_id=msg.from_user.id, text="Выберете пункт из меню:", reply_markup=markup)
+    logging.info("Старт программы")
 
 
-@bot.message_handler(commands=["real"])
+@bot.message_handler(commands=["calculator"])
 def real(msg: telebot.types.Message):
     global result
     bot.send_message(chat_id=msg.from_user.id, text="Для работы с комплексными числами, "
@@ -68,12 +70,15 @@ def real(msg: telebot.types.Message):
 def result_callback(query):
     global result, old_result
     data = query.data
+    logging.info(f"Ввод данных с клавиатуры: {data}")
     if data == "C":
         result = ""
     elif data == "=":
         result = math_string_to_list(result)
+        logging.info(f"Полученный результат: {result}")
     elif data == "complex":
         result = math_complex_to_list(result)
+        logging.info(f"Полученный результат: {result}")
     elif data == "<<":
         result = result[:-1]
     else:
@@ -91,7 +96,8 @@ def result_callback(query):
 @bot.message_handler(commands=["log"])
 def send_log(msg: telebot.types.Message):
     bot.send_message(chat_id=msg.from_user.id, text="Calculator log")
-    bot.send_document(chat_id=msg.from_user.id, document=open("files/logger.csv", 'rb'))
+    bot.send_document(chat_id=msg.from_user.id, document=open("files/mylog.log", 'rb'))
+    logging.info("Запрос лога")
 
 
 bot.polling(none_stop=True)
