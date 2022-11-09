@@ -17,7 +17,8 @@ keyboard = types.InlineKeyboardMarkup()
 keyboard.row(telebot.types.InlineKeyboardButton("C", callback_data="C"),
              telebot.types.InlineKeyboardButton("<<", callback_data="<<"),
              telebot.types.InlineKeyboardButton("(", callback_data="("),
-             telebot.types.InlineKeyboardButton(")", callback_data=")"))
+             telebot.types.InlineKeyboardButton(")", callback_data=")"),
+             telebot.types.InlineKeyboardButton("complex", callback_data="complex"))
 
 keyboard.row(telebot.types.InlineKeyboardButton("1", callback_data="1"),
              telebot.types.InlineKeyboardButton("2", callback_data="2"),
@@ -34,7 +35,8 @@ keyboard.row(telebot.types.InlineKeyboardButton("7", callback_data="7"),
              telebot.types.InlineKeyboardButton("9", callback_data="9"),
              telebot.types.InlineKeyboardButton("*", callback_data="*"))
 
-keyboard.row(telebot.types.InlineKeyboardButton(",", callback_data="."),
+keyboard.row(telebot.types.InlineKeyboardButton("i", callback_data="i"),
+             telebot.types.InlineKeyboardButton(",", callback_data="."),
              telebot.types.InlineKeyboardButton("0", callback_data="0"),
              telebot.types.InlineKeyboardButton("=", callback_data="="),
              telebot.types.InlineKeyboardButton("/", callback_data="/"))
@@ -53,6 +55,9 @@ def start(msg: telebot.types.Message):
 @bot.message_handler(commands=["real"])
 def real(msg: telebot.types.Message):
     global result
+    bot.send_message(chat_id=msg.from_user.id, text="Для работы с комплексными числами, "
+                                                    "введите выражение вида: (5-2i)+(4-1i)"
+                                                    " и 'complex' для вывода")
     if result == "":
         bot.send_message(chat_id=msg.from_user.id, text="0", reply_markup=keyboard)
     else:
@@ -67,6 +72,8 @@ def result_callback(query):
         result = ""
     elif data == "=":
         result = math_string_to_list(result)
+    elif data == "complex":
+        result = math_complex_to_list(result)
     elif data == "<<":
         result = result[:-1]
     else:
@@ -79,18 +86,6 @@ def result_callback(query):
             bot.edit_message_text(chat_id=query.message.chat.id, message_id=query.message.id,
                                   text=result, reply_markup=keyboard)
     old_result = result
-
-
-@bot.message_handler(commands=["complex"])
-def complex_(msg: telebot.types.Message):
-    bot.send_message(chat_id=msg.from_user.id, text="Введите комплексные числа, пример: (1 + 1i) + (5 - 2i)")
-    bot.register_next_step_handler(callback=complex_calc, message=msg)
-
-
-def complex_calc(msg: telebot.types.Message):
-    bot.send_message(chat_id=msg.from_user.id, text=math_complex_to_list(msg.text))
-    bot.send_message(chat_id=msg.from_user.id, text="/start")
-    log(msg.text, math_complex_to_list(msg.text))
 
 
 @bot.message_handler(commands=["log"])
