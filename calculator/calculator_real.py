@@ -1,5 +1,5 @@
 def solution(list_):
-    result = [int(list_[0])]
+    result = [float(list_[0])]
     i = 1
     while i < len(list_):
         if list_[i] == '+':
@@ -42,16 +42,18 @@ def math_string_to_list(s):
             elif s[i] == "-" and s[i - 1] == "(":
                 continue
             elif s[i] in ('*', '/', '+', '-', ')') and s[i - 1] != ')' and i != 0:
-                res.append(int(s[start + 1:i]))
+                res.append(float(s[start + 1:i]))
                 res.append(s[i])
                 start = i
             elif i == len(s) - 1:
-                res.append(int(s[start + 1:]))
-        return math_string_recurs(res)
+                res.append(float(s[start + 1:]))
+        return str(math_string_recurs(res))
     except ValueError:
         return "Неверный ввод!!!"
     except ZeroDivisionError:
         return "На ноль делить нельзя!!!"
+    except IndexError:
+        return "Неверный ввод!!!"
 
 
 
